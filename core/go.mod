@@ -5,7 +5,9 @@ go 1.18
 require (
 	github.com/dosco/graphjin v0.20.21
 	github.com/gin-gonic/gin v1.8.1
+	github.com/ichaly/go-env v0.0.1
 	github.com/jackc/pgx/v4 v4.16.1
+	go.uber.org/fx v1.17.1
 )
 
 require (
@@ -145,6 +147,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.8.0 // indirect
 	go.opentelemetry.io/otel/trace v1.8.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
+	go.uber.org/dig v1.14.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
