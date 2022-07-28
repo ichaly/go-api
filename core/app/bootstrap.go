@@ -4,19 +4,16 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/ichaly/go-env"
 	"go.uber.org/fx"
 )
 
-func Bootstrap(lifecycle fx.Lifecycle, engine *gin.Engine) {
+func Bootstrap(lifecycle fx.Lifecycle, e *gin.Engine, c *Config) {
 	lifecycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
-				port, _ := env.String(":${PORT:=8080}")
-				fmt.Printf("Now server is running on port %s\n", port)
-				fmt.Printf("Connect to http://localhost%s/ for GraphQL playground\n", port)
-				fmt.Printf("Test with Get: curl -g 'http://localhost%s/graphql?query={hello}'\n", port)
-				_ = engine.Run(port)
+				fmt.Printf("Now server is running on port %s\n", c.Port())
+				fmt.Printf("Test with Get: curl -g 'http://%s/%s?query={hello}'\n", c.HostPort, c.Endpoint)
+				_ = e.Run(fmt.Sprintf(":%v", c.HostPort))
 			}()
 			return nil
 		},
