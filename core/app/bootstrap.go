@@ -13,11 +13,19 @@ func Bootstrap(lifecycle fx.Lifecycle, svc *serv.Service, mux *chi.Mux, cfg *ser
 	lifecycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
-				fmt.Printf("Now server is running on port %s\n", cfg.Port)
-				fmt.Printf("Test with Get: curl -g 'http://%s//api/v1/graphql?query={hello}'\n", cfg.HostPort)
+				fmt.Printf("Now server is running on %s\n", cfg.HostPort)
+				fmt.Printf("Test with Get: curl -g 'http://%s/api/v1/graphql?query={hello}'\n", cfg.HostPort)
 				_ = svc.Attach(mux)
 				_ = http.ListenAndServe(cfg.HostPort, mux)
 			}()
+			return nil
+		},
+		OnStop: func(ctx context.Context) error {
+			db := svc.GetDB()
+			if db != nil {
+				_ = db.Close()
+			}
+			fmt.Printf("%s shutdown complete", cfg.AppName)
 			return nil
 		},
 	})
