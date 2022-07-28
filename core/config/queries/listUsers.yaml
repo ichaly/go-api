@@ -1,0 +1,8 @@
+name: listUsers
+query: |-
+  query listUsers @cacheControl(maxAge: 5000, scope: "private") {
+    users(limit: 1) {
+      id
+      email
+    }
+  }

@@ -213,7 +213,7 @@ database:
   # Max time after which database connections are not reused
   # max_connection_life_time: 0s
 
-  #log_level: "debug"
+#  log_level: "debug"
 
   # database ping timeout is used for db health checking
   ping_timeout: 1m

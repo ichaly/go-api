@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/dosco/graphjin v0.20.21
-	github.com/gin-gonic/gin v1.8.1
+	github.com/go-chi/chi v1.5.4
 	github.com/ichaly/go-env v0.0.1
 	github.com/jackc/pgx/v4 v4.16.1
 	go.uber.org/fx v1.17.1
@@ -43,8 +43,6 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
-	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/go-chi/chi v1.5.4 // indirect
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -96,7 +94,6 @@ require (
 	github.com/jackc/pgtype v1.11.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/jvatic/goja-babel v0.0.0-20220530111339-7d04743cb6ab // indirect
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 // indirect
 	github.com/klauspost/compress v1.15.6 // indirect
@@ -118,8 +115,6 @@ require (
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/mpvl/unique v0.0.0-20150818121801-cbe035fff7de // indirect
 	github.com/oklog/run v1.1.0 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
@@ -137,7 +132,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.12.0 // indirect
 	github.com/subosito/gotenv v1.4.0 // indirect
-	github.com/ugorji/go/codec v1.2.7 // indirect
 	go.mozilla.org/gopgagent v0.0.0-20170926210634-4d7ea76ff71a // indirect
 	go.mozilla.org/sops/v3 v3.7.3 // indirect
 	go.opencensus.io v0.23.0 // indirect
