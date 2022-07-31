@@ -6,8 +6,10 @@ import (
 )
 
 var Initializer = fx.Options(
-	fx.Provide(NewConfig),
-	fx.Provide(NewEngine),
-	fx.Provide(NewServer),
+	fx.Provide(
+		NewConfig,
+		NewEngine,
+		NewServer,
+	),
 	fx.Invoke(Bootstrap),
 )
