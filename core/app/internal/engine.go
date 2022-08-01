@@ -6,7 +6,10 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
-func NewEngine(c *serv.Config, s *chi.Mux) (svc *serv.Service, err error) {
-	svc, err = serv.NewGraphJinService(c)
+func NewEngine(c *serv.Config, r *chi.Mux) (svc *serv.Service, err error) {
+	if svc, err = serv.NewGraphJinService(c); err != nil {
+		return
+	}
+	err = svc.Attach(r)
 	return
 }
