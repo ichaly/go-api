@@ -9,6 +9,6 @@ func main() {
 	fx.New(
 		//禁用fx 默认logger
 		fx.NopLogger,
-		app.Initializer,
+		app.Modules,
 	).Run()
 }

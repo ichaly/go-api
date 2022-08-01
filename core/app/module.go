@@ -5,7 +5,7 @@ import (
 	"go.uber.org/fx"
 )
 
-var Initializer = fx.Options(
+var Modules = fx.Options(
 	fx.Provide(NewConfig),
 	fx.Provide(NewEngine),
 	fx.Provide(NewServer),
