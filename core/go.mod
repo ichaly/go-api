@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/dosco/graphjin v0.20.21
 	github.com/go-chi/chi v1.5.4
+	github.com/go-chi/render v1.0.2
 	github.com/ichaly/go-env v0.0.1
 	github.com/jackc/pgx/v4 v4.16.1
 	go.uber.org/fx v1.17.1
@@ -27,6 +28,7 @@ require (
 	github.com/Azure/go-autorest/tracing v0.6.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20220517143526-88bb52951d5b // indirect
 	github.com/adjust/gorails v0.0.0-20171013043634-2786ed0c03d3 // indirect
+	github.com/ajg/form v1.5.1 // indirect
 	github.com/armon/go-metrics v0.4.0 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/avast/retry-go v3.0.0+incompatible // indirect
