@@ -2,15 +2,10 @@ package internal
 
 import (
 	"github.com/dosco/graphjin/serv"
+	"github.com/ichaly/go-api/core/app/internal/util"
 	"path"
-	"path/filepath"
 )
 
-func NewConfig() (cfg *serv.Config, err error) {
-	root, err := filepath.Abs("./config")
-	if err != nil {
-		return
-	}
-	cfg, err = serv.ReadInConfig(path.Join(root, serv.GetConfigName()))
-	return
+func NewConfig() (*serv.Config, error) {
+	return serv.ReadInConfig(path.Join(util.Root(), "./config", serv.GetConfigName()))
 }
