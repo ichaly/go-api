@@ -1,4 +1,4 @@
-package internal
+package base
 
 import (
 	"github.com/go-chi/chi"

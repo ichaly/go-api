@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/ichaly/go-api/core/app/internal"
+	"github.com/ichaly/go-api/core/app/internal/base"
 	"github.com/ichaly/go-api/core/app/internal/plugin"
 	_ "github.com/ichaly/go-env/auto"
 	"go.uber.org/fx"
@@ -9,9 +9,9 @@ import (
 
 var Modules = fx.Options(
 	fx.Provide(
-		internal.NewConfig,
-		internal.NewEngine,
-		internal.NewServer,
+		base.NewConfig,
+		base.NewEngine,
+		base.NewServer,
 	),
 	fx.Provide(
 		fx.Annotated{
@@ -19,5 +19,5 @@ var Modules = fx.Options(
 			Target: plugin.NewCaptchaService,
 		},
 	),
-	fx.Invoke(internal.Bootstrap),
+	fx.Invoke(base.Bootstrap),
 )
