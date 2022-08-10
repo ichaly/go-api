@@ -10,7 +10,6 @@ import (
 var Modules = fx.Options(
 	fx.Provide(
 		internal.NewConfig,
-		internal.NewDatabase,
 		internal.NewEngine,
 		internal.NewServer,
 	),

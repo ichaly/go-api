@@ -4,11 +4,12 @@ import (
 	"github.com/dosco/graphjin/serv"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"github.com/ichaly/go-api/core/app/internal"
 	"github.com/ichaly/go-api/core/app/pkg"
 	"net/http"
 )
 
-func NewCaptchaService(c *serv.Config, r *chi.Mux, s *serv.Service) core.Plugin {
+func NewCaptchaService(c *internal.Config, r *chi.Mux, s *serv.Service) core.Plugin {
 	return &CaptchaService{
 		Router:  r,
 		Config:  c,
@@ -18,8 +19,8 @@ func NewCaptchaService(c *serv.Config, r *chi.Mux, s *serv.Service) core.Plugin 
 
 type CaptchaService struct {
 	Router  *chi.Mux
-	Config  *serv.Config
 	Service *serv.Service
+	Config  *internal.Config
 }
 
 func (my *CaptchaService) Name() string {
