@@ -10,13 +10,14 @@ import (
 var Modules = fx.Options(
 	fx.Provide(
 		internal.NewConfig,
+		internal.NewDatabase,
 		internal.NewEngine,
 		internal.NewServer,
 	),
 	fx.Provide(
 		fx.Annotated{
-			Target: plugin.NewCaptchaService,
 			Group:  "plugin",
+			Target: plugin.NewCaptchaService,
 		},
 	),
 	fx.Invoke(internal.Bootstrap),

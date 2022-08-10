@@ -41,34 +41,11 @@ func NewViper() (*viper.Viper, error) {
 	for _, e := range os.Environ() {
 		if strings.HasPrefix(e, "GJ_") || strings.HasPrefix(e, "SJ_") {
 			kv := strings.SplitN(e, "=", 2)
-			setKeyValue(vi, kv[0], kv[1])
+			util.SetKeyValue(vi, kv[0], kv[1])
 		}
 	}
 
 	return vi, nil
-}
-
-func setKeyValue(vi *viper.Viper, key string, value interface{}) bool {
-	if strings.HasPrefix(key, "GJ_") || strings.HasPrefix(key, "SG_") {
-		key = key[3:]
-	}
-	uc := strings.Count(key, "_")
-	k := strings.ToLower(key)
-
-	if vi.Get(k) != nil {
-		vi.Set(k, value)
-		return true
-	}
-
-	for i := 0; i < uc; i++ {
-		k = strings.Replace(k, "_", ".", 1)
-		if vi.Get(k) != nil {
-			vi.Set(k, value)
-			return true
-		}
-	}
-
-	return false
 }
 
 func newViper(configPath, configFile string) *viper.Viper {
