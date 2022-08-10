@@ -3,3 +3,7 @@ go 1.18
 use (
 	./core
 )
+
+replace (
+	github.com/dosco/graphjin => ../graphjin
+)

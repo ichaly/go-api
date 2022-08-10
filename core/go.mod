@@ -3,12 +3,16 @@ module github.com/ichaly/go-api/core
 go 1.18
 
 require (
-	github.com/dosco/graphjin v0.20.21
+	github.com/dosco/graphjin v0.20.23
 	github.com/go-chi/chi v1.5.4
 	github.com/go-chi/render v1.0.2
 	github.com/ichaly/go-env v0.0.1
 	github.com/jackc/pgx/v4 v4.16.1
-	go.uber.org/fx v1.17.1
+	github.com/spf13/viper v1.12.0
+	go.uber.org/fx v1.18.1
+	gorm.io/driver/mysql v1.3.5
+	gorm.io/driver/postgres v1.3.8
+	gorm.io/gorm v1.23.8
 )
 
 require (
@@ -94,6 +98,8 @@ require (
 	github.com/jackc/pgproto3/v2 v2.3.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.11.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jvatic/goja-babel v0.0.0-20220530111339-7d04743cb6ab // indirect
@@ -132,7 +138,6 @@ require (
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.12.0 // indirect
 	github.com/subosito/gotenv v1.4.0 // indirect
 	go.mozilla.org/gopgagent v0.0.0-20170926210634-4d7ea76ff71a // indirect
 	go.mozilla.org/sops/v3 v3.7.3 // indirect
@@ -143,7 +148,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.8.0 // indirect
 	go.opentelemetry.io/otel/trace v1.8.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/dig v1.14.0 // indirect
+	go.uber.org/dig v1.15.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
