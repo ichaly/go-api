@@ -8,6 +8,7 @@ require (
 	github.com/go-chi/render v1.0.2
 	github.com/ichaly/go-env v0.0.1
 	github.com/jackc/pgx/v4 v4.16.1
+	github.com/mojocn/base64Captcha v1.3.5
 	go.uber.org/fx v1.18.1
 )
 
@@ -58,6 +59,7 @@ require (
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -147,6 +149,7 @@ require (
 	go.uber.org/multierr v1.8.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
+	golang.org/x/image v0.0.0-20190802002840-cff245a6509b // indirect
 	golang.org/x/net v0.0.0-20220607020251-c690dde0001d // indirect
 	golang.org/x/oauth2 v0.0.0-20220524215830-622c5d57e401 // indirect
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f // indirect

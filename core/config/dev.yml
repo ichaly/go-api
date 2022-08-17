@@ -136,6 +136,13 @@ admin_secret_key: blahblah
 # GJ_AUTH_RAILS_REDIS_PASSWORD
 # GJ_AUTH_JWT_PUBLIC_KEY_FILE
 
+captcha:
+  height: 40
+  width: 100
+  length: 6
+  max-skew: 0.5
+  dot-count: 80
+
 auth:
   # Can be 'none', 'rails', 'jwt' or 'header'
   type: none
