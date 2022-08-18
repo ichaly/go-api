@@ -11,8 +11,8 @@ type Engine = serv.Config
 
 type Config struct {
 	// Engine holds config values for the GraphJin compiler
-	Engine  `mapstructure:",squash"`
-	Captcha *base64Captcha.DriverDigit `mapstructure:"captcha"`
+	Engine `mapstructure:",squash"`
+	Driver *base64Captcha.DriverDigit `mapstructure:"captcha"`
 }
 
 func NewConfig() (*Config, error) {
