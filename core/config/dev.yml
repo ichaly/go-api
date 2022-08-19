@@ -137,11 +137,11 @@ admin_secret_key: blahblah
 # GJ_AUTH_JWT_PUBLIC_KEY_FILE
 
 captcha:
+  source: 1234567890
   height: 40
   width: 100
-  length: 6
-  max-skew: 0.5
-  dot-count: 80
+  length: 4
+  noise-count: 20
 
 auth:
   # Can be 'none', 'rails', 'jwt' or 'header'

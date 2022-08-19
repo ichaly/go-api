@@ -16,10 +16,10 @@ type CaptchaService struct {
 }
 
 func NewCaptchaService(c *base.Config, r *chi.Mux) core.Plugin {
-	b := base64Captcha.NewCaptcha(
+	d := base64Captcha.NewCaptcha(
 		c.Driver, base64Captcha.DefaultMemStore,
 	)
-	return &CaptchaService{Config: c, Router: r, Captcha: b}
+	return &CaptchaService{Config: c, Router: r, Captcha: d}
 }
 
 func (my *CaptchaService) Name() string {
