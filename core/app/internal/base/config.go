@@ -10,9 +10,19 @@ import (
 
 type Engine = serv.Config
 
+type Database struct {
+	Type     string `json:"type"`
+	Url      string `json:"url"`
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 type Config struct {
-	// Engine holds config values for the GraphJin compiler
 	Engine `mapstructure:",squash"`
+	Cache  *Database                   `mapstructure:"cache"`
 	Driver *base64Captcha.DriverString `mapstructure:"captcha"`
 }
 

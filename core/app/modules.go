@@ -12,6 +12,7 @@ var Modules = fx.Options(
 		base.NewConfig,
 		base.NewEngine,
 		base.NewServer,
+		base.NewCache,
 	),
 	fx.Provide(
 		fx.Annotated{
