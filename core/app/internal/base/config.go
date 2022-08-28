@@ -3,7 +3,6 @@ package base
 import (
 	"github.com/dosco/graphjin/serv"
 	"github.com/ichaly/go-api/core/app/internal/util"
-	"github.com/mojocn/base64Captcha"
 	"image/color"
 	"path"
 )
@@ -22,8 +21,7 @@ type Database struct {
 
 type Config struct {
 	Engine `mapstructure:",squash"`
-	Cache  *Database                   `mapstructure:"cache"`
-	Driver *base64Captcha.DriverString `mapstructure:"captcha"`
+	Cache  *Database `mapstructure:"cache"`
 }
 
 func NewConfig() (*Config, error) {
@@ -36,6 +34,7 @@ func NewConfig() (*Config, error) {
 	v.RegisterAlias("captcha.BgColor", "captcha.bg-color")
 	v.RegisterAlias("captcha.NoiseCount", "captcha.noise-count")
 
+	v.SetDefault("cache.type", "memory")
 	v.SetDefault("captcha.BgColor", color.RGBA{A: 255, R: 233, G: 238, B: 243})
 	v.SetDefault("captcha.NoiseCount", 20)
 	v.SetDefault("captcha.Fonts", []string{"3Dumb.ttf"})
