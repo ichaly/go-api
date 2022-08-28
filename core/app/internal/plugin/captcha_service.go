@@ -69,7 +69,7 @@ func (my *CaptchaService) Verify(c context.Context, k string, d string) (bool, e
 		}
 	}
 
-	return false, nil
+	return true, nil
 }
 
 func (my *CaptchaService) verifyHandler() func(w http.ResponseWriter, r *http.Request) {
