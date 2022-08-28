@@ -5,12 +5,13 @@ import (
 	"github.com/eko/gocache/v3/cache"
 	"github.com/eko/gocache/v3/store"
 	"github.com/go-redis/redis/v8"
+	"strings"
 	"time"
 )
 
 func NewCache(c *Config) (*cache.Cache[string], error) {
 	var s store.StoreInterface
-	if c.Cache.Type == "redis" {
+	if strings.ToLower(c.Cache.Type) == "redis" {
 		s = store.NewRedis(redis.NewClient(&redis.Options{
 			Addr:     c.Cache.Url,
 			Username: c.Cache.Username,
