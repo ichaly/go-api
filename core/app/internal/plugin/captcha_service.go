@@ -38,10 +38,14 @@ func (my *CaptchaService) Init() {
 	})
 }
 
-func (my *CaptchaService) Verify(c context.Context, k string, d string) (bool, error) {
-	val, err := my.Store.Get(c, k)
+func (my *CaptchaService) Verify(ctx context.Context, key string, str string, del ...bool) (bool, error) {
+	val, err := my.Store.Get(ctx, key)
 	if err != nil {
 		return false, err
+	}
+
+	if len(del) > 0 && del[0] {
+		_ = my.Store.Delete(ctx, key)
 	}
 
 	var data map[int]captcha.CharDot
@@ -50,7 +54,7 @@ func (my *CaptchaService) Verify(c context.Context, k string, d string) (bool, e
 		return false, err
 	}
 
-	dots := strings.Split(d, ",")
+	dots := strings.Split(str, ",")
 	if (len(data) * 2) == len(dots) {
 		return false, nil
 	}
@@ -62,8 +66,7 @@ func (my *CaptchaService) Verify(c context.Context, k string, d string) (bool, e
 		if !captcha.CheckPointDistWithPadding(
 			int64(sx), int64(sy),
 			int64(dot.Dx), int64(dot.Dy),
-			int64(dot.Width), int64(dot.Height),
-			5,
+			int64(dot.Width), int64(dot.Height), 5,
 		) {
 			return false, nil
 		}
