@@ -11,7 +11,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/ichaly/go-env v0.0.1
 	github.com/jackc/pgx/v4 v4.16.1
-	github.com/mojocn/base64Captcha v1.3.5
+	github.com/wenlng/go-captcha v1.2.5
 	go.uber.org/fx v1.18.1
 )
 
@@ -150,7 +150,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.12.0 // indirect
 	github.com/subosito/gotenv v1.4.0 // indirect
-	github.com/wenlng/go-captcha v1.2.5 // indirect
 	go.mozilla.org/gopgagent v0.0.0-20170926210634-4d7ea76ff71a // indirect
 	go.mozilla.org/sops/v3 v3.7.3 // indirect
 	go.opencensus.io v0.23.0 // indirect

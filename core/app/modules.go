@@ -14,11 +14,9 @@ var Modules = fx.Options(
 		base.NewServer,
 		base.NewCache,
 	),
-	fx.Provide(
-		fx.Annotated{
-			Group:  "plugin",
-			Target: plugin.NewCaptchaService,
-		},
-	),
+	fx.Provide(fx.Annotated{
+		Group:  "plugin",
+		Target: plugin.NewCaptchaService,
+	}),
 	fx.Invoke(base.Bootstrap),
 )
