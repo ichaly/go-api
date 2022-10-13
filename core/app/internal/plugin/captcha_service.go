@@ -28,7 +28,7 @@ func NewCaptchaService(c *base.Config, r *chi.Mux, s *cache.Cache[string]) core.
 }
 
 func (my *CaptchaService) Name() string {
-	return "Captcha Service"
+	return "CaptchaService"
 }
 
 func (my *CaptchaService) Init() {

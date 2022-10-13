@@ -18,5 +18,9 @@ var Modules = fx.Options(
 		Group:  "plugin",
 		Target: plugin.NewCaptchaService,
 	}),
+	fx.Provide(fx.Annotated{
+		Group:  "plugin",
+		Target: plugin.NewOauthService,
+	}),
 	fx.Invoke(base.Bootstrap),
 )
