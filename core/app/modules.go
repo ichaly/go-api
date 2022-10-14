@@ -18,6 +18,10 @@ var Modules = fx.Options(
 		Group:  "plugin",
 		Target: plugin.NewCaptchaService,
 	}),
+	fx.Provide(
+		plugin.NewOauthTokenStore,
+		plugin.NewOauthClientStore,
+	),
 	fx.Provide(fx.Annotated{
 		Group:  "plugin",
 		Target: plugin.NewOauthService,
