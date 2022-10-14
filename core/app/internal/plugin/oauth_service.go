@@ -57,9 +57,11 @@ func (my *OauthService) Init() {
 	//		next.ServeHTTP(w, r.WithContext(ctx))
 	//	})
 	//})
-	my.Router.Route("/oauth", func(r chi.Router) {
-		r.Get("/authorize", my.authorizeHandler())
-		r.Get("/token", my.tokenHandler())
+	my.Router.Group(func(r chi.Router) {
+		r.Route("/oauth", func(r chi.Router) {
+			r.Get("/authorize", my.authorizeHandler())
+			r.Get("/token", my.tokenHandler())
+		})
 	})
 }
 
