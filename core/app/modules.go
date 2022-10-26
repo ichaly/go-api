@@ -2,7 +2,8 @@ package core
 
 import (
 	"github.com/ichaly/go-api/core/app/internal/base"
-	"github.com/ichaly/go-api/core/app/internal/plugin"
+	"github.com/ichaly/go-api/core/app/internal/plugin/captcha"
+	"github.com/ichaly/go-api/core/app/internal/plugin/oauth"
 	_ "github.com/ichaly/go-env/auto"
 	"go.uber.org/fx"
 )
@@ -16,15 +17,15 @@ var Modules = fx.Options(
 	),
 	fx.Provide(fx.Annotated{
 		Group:  "plugin",
-		Target: plugin.NewCaptchaService,
+		Target: captcha.NewCaptchaService,
 	}),
 	fx.Provide(
-		plugin.NewOauthTokenStore,
-		plugin.NewOauthClientStore,
+		oauth.NewOauthTokenStore,
+		oauth.NewOauthClientStore,
 	),
 	fx.Provide(fx.Annotated{
 		Group:  "plugin",
-		Target: plugin.NewOauthService,
+		Target: oauth.NewOauthService,
 	}),
 	fx.Invoke(base.Bootstrap),
 )

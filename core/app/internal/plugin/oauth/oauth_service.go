@@ -1,4 +1,4 @@
-package plugin
+package oauth
 
 import (
 	"github.com/eko/gocache/v3/cache"
