@@ -13,7 +13,6 @@ import (
 	"github.com/go-oauth2/oauth2/v4/errors"
 	"github.com/go-oauth2/oauth2/v4/manage"
 	"github.com/go-oauth2/oauth2/v4/server"
-	"github.com/go-oauth2/oauth2/v4/store"
 )
 
 type OauthService struct {
@@ -22,7 +21,7 @@ type OauthService struct {
 	Store  *cache.Cache[string]
 }
 
-func NewOauthService(r *chi.Mux, t oauth2.TokenStore, s *store.ClientStore) core.Plugin {
+func NewOauthService(r *chi.Mux, t oauth2.TokenStore, s oauth2.ClientStore) core.Plugin {
 	manager := manage.NewDefaultManager()
 	manager.MustTokenStorage(t, nil)
 	manager.MapClientStorage(s)
@@ -59,8 +58,8 @@ func (my *OauthService) Init() {
 	//})
 	my.Router.Group(func(r chi.Router) {
 		r.Route("/oauth", func(r chi.Router) {
-			r.Get("/authorize", my.authorizeHandler())
 			r.Get("/token", my.tokenHandler())
+			r.Get("/authorize", my.authorizeHandler())
 		})
 	})
 }
