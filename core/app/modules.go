@@ -20,12 +20,17 @@ var Modules = fx.Options(
 		Target: captcha.NewCaptchaService,
 	}),
 	fx.Provide(
+		oauth.NewOauthServer,
 		oauth.NewOauthTokenStore,
 		oauth.NewOauthClientStore,
+		fx.Annotated{
+			Group:  "plugin",
+			Target: oauth.NewOauthService,
+		},
+		fx.Annotated{
+			Group:  "middleware",
+			Target: oauth.NewOauthTokenVerify,
+		},
 	),
-	fx.Provide(fx.Annotated{
-		Group:  "plugin",
-		Target: oauth.NewOauthService,
-	}),
 	fx.Invoke(base.Bootstrap),
 )

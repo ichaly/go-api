@@ -12,22 +12,27 @@ import (
 
 type Enhance struct {
 	fx.In
-	Plugins     []core.Plugin     `group:"plugin"`
-	Middlewares []core.Middleware `group:"middleware"`
+	Plugins     []core.Plugin `group:"plugin"`
+	Middlewares []core.Plugin `group:"middleware"`
 }
 
 func Bootstrap(
 	l fx.Lifecycle, s *serv.Service, r *chi.Mux, c *Config, e Enhance,
 ) {
-	//init Plugins and Middlewares
-	for _, p := range e.Plugins {
-		p.Init()
-	}
+	//init Middlewares
 	for _, m := range e.Middlewares {
 		m.Init()
 	}
 	l.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
+			err := s.Attach(r)
+			if err != nil {
+				return err
+			}
+			//init Plugins
+			for _, p := range e.Plugins {
+				p.Init()
+			}
 			go func() {
 				fmt.Printf("Now server is running on %s\n", c.HostPort)
 				fmt.Printf("Test with Get: curl -g 'http://%s/api/v1/graphql?query={hello}'\n", c.HostPort)
