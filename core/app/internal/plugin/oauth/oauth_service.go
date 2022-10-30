@@ -1,7 +1,7 @@
 package oauth
 
 import (
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/ichaly/go-api/core/app/internal/base"
 	"github.com/ichaly/go-api/core/app/pkg"
@@ -27,10 +27,8 @@ func (my *OauthService) Init() {
 	//授权路由
 	my.Router.Group(func(r chi.Router) {
 		r.Route("/oauth", func(r chi.Router) {
-			r.Get("/token", my.tokenHandler())
-			r.Post("/token", my.tokenHandler())
-			r.Get("/authorize", my.authorizeHandler())
-			r.Post("/authorize", my.authorizeHandler())
+			r.HandleFunc("/token", my.tokenHandler())
+			r.HandleFunc("/authorize", my.authorizeHandler())
 		})
 	})
 }

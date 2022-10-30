@@ -2,7 +2,7 @@ package oauth
 
 import (
 	"context"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/ichaly/go-api/core/app/internal/base"
@@ -26,14 +26,9 @@ func (my *TokenVerify) Name() string {
 func (my *TokenVerify) Init() {
 	//使用中间件鉴权
 	//my.Router.Use(my.verifyHandler)
-	//my.Router.Route("/api", func(r chi.Router) {
+	//my.Router.Route("/", func(r chi.Router) {
 	//	r.Use(my.verifyHandler)
 	//})
-	my.Router.Group(func(r chi.Router) {
-		r.Route("/api", func(r chi.Router) {
-			r.Use(my.verifyHandler)
-		})
-	})
 }
 
 func (my *TokenVerify) verifyHandler(next http.Handler) http.Handler {

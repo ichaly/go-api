@@ -6,12 +6,5 @@ import (
 )
 
 func NewEngine(c *Config) (*serv.Service, error) {
-	svc, err := serv.NewGraphJinService(&c.Engine)
-	if err != nil {
-		return nil, err
-	}
-	if err != nil {
-		return nil, err
-	}
-	return svc, nil
+	return serv.NewGraphJinService(&c.Engine)
 }
