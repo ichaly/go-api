@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/dosco/graphjin/serv"
-	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi"
 	"github.com/ichaly/go-api/core/app/pkg"
 	"go.uber.org/fx"
 	"net/http"

@@ -6,7 +6,7 @@ require (
 	github.com/allegro/bigcache v1.2.1
 	github.com/dosco/graphjin v0.21.5
 	github.com/eko/gocache/v3 v3.1.1
-	github.com/go-chi/chi/v5 v5.0.7
+	github.com/go-chi/chi v1.5.4
 	github.com/go-chi/render v1.0.2
 	github.com/go-oauth2/oauth2/v4 v4.5.1
 	github.com/go-redis/redis/v8 v8.11.5
@@ -55,7 +55,6 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/go-chi/chi v1.5.4 // indirect
 	github.com/go-http-utils/headers v0.0.0-20181008091004-fed159eddc2a // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect

@@ -2,7 +2,7 @@ package oauth
 
 import (
 	"context"
-	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/ichaly/go-api/core/app/internal/base"
