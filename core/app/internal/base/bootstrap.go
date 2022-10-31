@@ -23,26 +23,26 @@ func Bootstrap(
 	for _, m := range e.Middlewares {
 		m.Init()
 	}
+	//wrap graphql service
+	r.Group(func(r chi.Router) {
+		r.Use(func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				ctx := context.WithValue(r.Context(), "user", "123")
+				//if _, err := my.Oauth.ValidationBearerToken(r); err != nil {
+				//	render.JSON(w, r, base.ERROR.WithData(err.Error()))
+				//	return
+				//}
+				next.ServeHTTP(w, r.WithContext(ctx))
+			})
+		})
+		_ = s.Attach(r)
+	})
+	//init plugins
+	for _, p := range e.Plugins {
+		p.Init()
+	}
 	l.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			//init plugins
-			for _, p := range e.Plugins {
-				p.Init()
-			}
-			//attach graphql
-			r.Group(func(r chi.Router) {
-				r.Use(func(next http.Handler) http.Handler {
-					return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-						ctx := context.WithValue(r.Context(), "user", "123")
-						//if _, err := my.Oauth.ValidationBearerToken(r); err != nil {
-						//	render.JSON(w, r, base.ERROR.WithData(err.Error()))
-						//	return
-						//}
-						next.ServeHTTP(w, r.WithContext(ctx))
-					})
-				})
-				_ = s.Attach(r)
-			})
 			go func() {
 				fmt.Printf("Now server is running on %s\n", c.HostPort)
 				fmt.Printf("Test with Get: curl -g 'http://%s/api/v1/graphql?query={hello}'\n", c.HostPort)
