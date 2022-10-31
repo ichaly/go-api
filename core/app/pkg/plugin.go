@@ -1,6 +1,9 @@
 package core
 
+import "github.com/go-chi/chi"
+
 type Plugin interface {
 	Name() string
-	Init()
+	Protected() bool
+	Init(r chi.Router)
 }

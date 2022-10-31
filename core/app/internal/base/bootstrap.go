@@ -21,25 +21,29 @@ func Bootstrap(
 ) {
 	//init middlewares
 	for _, m := range e.Middlewares {
-		m.Init()
+		if !m.Protected() {
+			m.Init(r)
+		}
 	}
 	//wrap graphql service
 	r.Group(func(r chi.Router) {
-		r.Use(func(next http.Handler) http.Handler {
-			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				ctx := context.WithValue(r.Context(), "user", "123")
-				//if _, err := my.Oauth.ValidationBearerToken(r); err != nil {
-				//	render.JSON(w, r, base.ERROR.WithData(err.Error()))
-				//	return
-				//}
-				next.ServeHTTP(w, r.WithContext(ctx))
-			})
-		})
+		for _, m := range e.Middlewares {
+			if m.Protected() {
+				m.Init(r)
+			}
+		}
 		_ = s.Attach(r)
+		for _, p := range e.Plugins {
+			if p.Protected() {
+				p.Init(r)
+			}
+		}
 	})
 	//init plugins
 	for _, p := range e.Plugins {
-		p.Init()
+		if !p.Protected() {
+			p.Init(r)
+		}
 	}
 	l.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {

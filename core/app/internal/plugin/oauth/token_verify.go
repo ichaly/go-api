@@ -11,24 +11,24 @@ import (
 )
 
 type TokenVerify struct {
-	Router *chi.Mux
-	Oauth  *server.Server
+	Oauth *server.Server
 }
 
-func NewOauthTokenVerify(r *chi.Mux, s *server.Server) core.Plugin {
-	return &TokenVerify{Router: r, Oauth: s}
+func NewOauthTokenVerify(s *server.Server) core.Plugin {
+	return &TokenVerify{Oauth: s}
 }
 
 func (my *TokenVerify) Name() string {
 	return "OauthTokenVerify"
 }
 
-func (my *TokenVerify) Init() {
+func (my *TokenVerify) Protected() bool {
+	return true
+}
+
+func (my *TokenVerify) Init(r chi.Router) {
 	//使用中间件鉴权
-	//my.Router.Use(my.verifyHandler)
-	//my.Router.Route("/", func(r chi.Router) {
-	//	r.Use(my.verifyHandler)
-	//})
+	r.Use(my.verifyHandler)
 }
 
 func (my *TokenVerify) verifyHandler(next http.Handler) http.Handler {

@@ -16,23 +16,26 @@ import (
 )
 
 type CaptchaService struct {
-	Router  *chi.Mux
 	Config  *base.Config
 	Captcha *captcha.Captcha
 	Store   *cache.Cache[string]
 }
 
-func NewCaptchaService(c *base.Config, r *chi.Mux, s *cache.Cache[string]) core.Plugin {
+func NewCaptchaService(c *base.Config, s *cache.Cache[string]) core.Plugin {
 	g := captcha.GetCaptcha()
-	return &CaptchaService{Store: s, Config: c, Router: r, Captcha: g}
+	return &CaptchaService{Store: s, Config: c, Captcha: g}
 }
 
 func (my *CaptchaService) Name() string {
 	return "CaptchaService"
 }
 
-func (my *CaptchaService) Init() {
-	my.Router.Route("/captcha", func(r chi.Router) {
+func (my *CaptchaService) Protected() bool {
+	return false
+}
+
+func (my *CaptchaService) Init(r chi.Router) {
+	r.Route("/captcha", func(r chi.Router) {
 		r.Get("/verify", my.verifyHandler())
 		r.Get("/generate", my.generateHandler())
 	})
