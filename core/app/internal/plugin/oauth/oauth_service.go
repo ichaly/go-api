@@ -25,11 +25,9 @@ func (my *OauthService) Name() string {
 
 func (my *OauthService) Init() {
 	//授权路由
-	my.Router.Group(func(r chi.Router) {
-		r.Route("/oauth", func(r chi.Router) {
-			r.HandleFunc("/token", my.tokenHandler())
-			r.HandleFunc("/authorize", my.authorizeHandler())
-		})
+	my.Router.Route("/oauth", func(r chi.Router) {
+		r.HandleFunc("/token", my.tokenHandler())
+		r.HandleFunc("/authorize", my.authorizeHandler())
 	})
 }
 
