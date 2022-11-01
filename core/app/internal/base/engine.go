@@ -2,9 +2,13 @@ package base
 
 import (
 	"github.com/dosco/graphjin/serv"
-	_ "github.com/jackc/pgx/v4/stdlib"
+	"gorm.io/gorm"
 )
 
-func NewEngine(c *Config) (*serv.Service, error) {
-	return serv.NewGraphJinService(&c.Engine)
+func NewEngine(c *Config, d *gorm.DB) (*serv.Service, error) {
+	db, err := d.DB()
+	if err != nil {
+		return nil, err
+	}
+	return serv.NewGraphJinService(&c.Engine, serv.OptionSetDB(db))
 }

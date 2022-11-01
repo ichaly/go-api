@@ -13,8 +13,8 @@ func NewCache(c *Config) (*cache.Cache[string], error) {
 	var s store.StoreInterface
 	if strings.ToLower(c.Cache.Type) == "redis" {
 		s = store.NewRedis(redis.NewClient(&redis.Options{
-			Addr:     c.Cache.Url,
-			Username: c.Cache.Username,
+			Addr:     c.Cache.Host,
+			Username: c.Cache.User,
 			Password: c.Cache.Password,
 		}))
 	} else {

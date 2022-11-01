@@ -9,19 +9,9 @@ import (
 
 type Engine = serv.Config
 
-type Database struct {
-	Type     string `json:"type"`
-	Url      string `json:"url"`
-	Host     string `json:"host"`
-	Port     int    `json:"port"`
-	Name     string `json:"name"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
 type Config struct {
 	Engine `mapstructure:",squash"`
-	Cache  *Database `mapstructure:"cache"`
+	Cache  *serv.Database `mapstructure:"cache"`
 }
 
 func NewConfig() (*Config, error) {

@@ -11,9 +11,11 @@ require (
 	github.com/go-oauth2/oauth2/v4 v4.5.1
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/ichaly/go-env v0.0.1
-	github.com/jackc/pgx/v4 v4.17.2
 	github.com/wenlng/go-captcha v1.2.5
 	go.uber.org/fx v1.18.2
+	gorm.io/driver/mysql v1.4.3
+	gorm.io/driver/postgres v1.4.5
+	gorm.io/gorm v1.24.1-0.20221019064659-5dd2bb482755
 )
 
 require (
@@ -106,6 +108,9 @@ require (
 	github.com/jackc/pgproto3/v2 v2.3.1 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.12.0 // indirect
+	github.com/jackc/pgx/v4 v4.17.2 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jvatic/goja-babel v0.0.0-20221025121832-7a7cfce0f891 // indirect
