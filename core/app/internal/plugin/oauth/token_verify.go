@@ -5,7 +5,6 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/go-oauth2/oauth2/v4/server"
-	"github.com/ichaly/go-api/core/app/internal/base"
 	core "github.com/ichaly/go-api/core/app/pkg"
 	"net/http"
 )
@@ -35,7 +34,7 @@ func (my *TokenVerify) verifyHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), "user", "123")
 		if _, err := my.Oauth.ValidationBearerToken(r); err != nil {
-			render.JSON(w, r, base.ERROR.WithData(err.Error()))
+			render.JSON(w, r, core.ERROR.WithData(err.Error()))
 			return
 		}
 		next.ServeHTTP(w, r.WithContext(ctx))

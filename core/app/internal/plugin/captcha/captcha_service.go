@@ -87,7 +87,7 @@ func (my *CaptchaService) verifyHandler() func(w http.ResponseWriter, r *http.Re
 		if err != nil {
 			panic(err)
 		}
-		render.JSON(w, r, base.OK.WithData(res))
+		render.JSON(w, r, core.OK.WithData(res))
 	}
 }
 
@@ -105,6 +105,6 @@ func (my *CaptchaService) generateHandler() func(w http.ResponseWriter, r *http.
 		if err != nil {
 			panic(err)
 		}
-		render.JSON(w, r, base.OK.WithData(map[string]string{"key": key, "image": image, "thumb": thumb}))
+		render.JSON(w, r, core.OK.WithData(map[string]string{"key": key, "image": image, "thumb": thumb}))
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/go-oauth2/oauth2/v4"
 	"github.com/go-oauth2/oauth2/v4/models"
 	"github.com/go-oauth2/oauth2/v4/store"
+	"github.com/ichaly/go-api/core/app/pkg"
 )
 
 type ClientStore struct {
@@ -24,16 +25,14 @@ func (my *ClientStore) funGetByID(ctx context.Context, id string) (oauth2.Client
 		domain
 	  }
 	}`
-	vars := json.RawMessage(`{
-		"id": $id,
-	}`)
-	ql, err := my.Engine.GetGraphJin().GraphQL(ctx, gql, vars, nil)
+	ql, err := my.Engine.GetGraphJin().GraphQL(ctx, gql, core.Variable{
+		"id": id,
+	}.Marshal(), nil)
 	if err != nil {
 		return nil, err
 	}
 	var c *models.Client
-	err = json.Unmarshal(ql.Data, c)
-	if err != nil {
+	if err = json.Unmarshal(ql.Data, c); err != nil {
 		return nil, err
 	}
 	return c, nil

@@ -3,7 +3,6 @@ package oauth
 import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
-	"github.com/ichaly/go-api/core/app/internal/base"
 	"github.com/ichaly/go-api/core/app/pkg"
 	"net/http"
 
@@ -37,7 +36,7 @@ func (my *OauthService) Init(r chi.Router) {
 func (my *OauthService) tokenHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := my.Oauth.HandleTokenRequest(w, r); err != nil {
-			render.JSON(w, r, base.ERROR.WithData(err.Error()))
+			render.JSON(w, r, core.ERROR.WithData(err.Error()))
 		}
 	}
 }
@@ -45,7 +44,7 @@ func (my *OauthService) tokenHandler() func(w http.ResponseWriter, r *http.Reque
 func (my *OauthService) authorizeHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := my.Oauth.HandleAuthorizeRequest(w, r); err != nil {
-			render.JSON(w, r, base.ERROR.WithData(err.Error()))
+			render.JSON(w, r, core.ERROR.WithData(err.Error()))
 		}
 	}
 }
