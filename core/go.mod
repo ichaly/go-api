@@ -7,10 +7,12 @@ require (
 	github.com/dosco/graphjin v0.21.5
 	github.com/eko/gocache/v3 v3.1.1
 	github.com/go-chi/chi v1.5.4
-	github.com/go-chi/render v1.0.2
 	github.com/go-oauth2/oauth2/v4 v4.5.1
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/ichaly/go-env v0.0.1
+	github.com/json-iterator/go v1.1.12
+	github.com/tidwall/gjson v1.12.1
+	github.com/unrolled/render v1.5.0
 	github.com/wenlng/go-captcha v1.2.5
 	go.uber.org/fx v1.18.2
 	gorm.io/driver/mysql v1.4.3
@@ -36,7 +38,6 @@ require (
 	github.com/ProtonMail/go-crypto v0.0.0-20220407094043-a94812496cf5 // indirect
 	github.com/XiaoMi/pegasus-go-client v0.0.0-20210427083443-f3b6b08bc4c2 // indirect
 	github.com/adjust/gorails v0.0.0-20171013043634-2786ed0c03d3 // indirect
-	github.com/ajg/form v1.5.1 // indirect
 	github.com/armon/go-metrics v0.3.10 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/avast/retry-go v3.0.0+incompatible // indirect
@@ -113,7 +114,6 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/jvatic/goja-babel v0.0.0-20221025121832-7a7cfce0f891 // indirect
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 // indirect
 	github.com/klauspost/compress v1.15.11 // indirect
@@ -162,7 +162,6 @@ require (
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/tidwall/btree v0.0.0-20191029221954-400434d76274 // indirect
 	github.com/tidwall/buntdb v1.1.2 // indirect
-	github.com/tidwall/gjson v1.12.1 // indirect
 	github.com/tidwall/grect v0.0.0-20161006141115-ba9a043346eb // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect

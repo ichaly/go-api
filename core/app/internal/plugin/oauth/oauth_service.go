@@ -2,19 +2,20 @@ package oauth
 
 import (
 	"github.com/go-chi/chi"
-	"github.com/go-chi/render"
 	"github.com/ichaly/go-api/core/app/pkg"
+	"github.com/unrolled/render"
 	"net/http"
 
 	"github.com/go-oauth2/oauth2/v4/server"
 )
 
 type OauthService struct {
-	Oauth *server.Server
+	Oauth  *server.Server
+	Render *render.Render
 }
 
-func NewOauthService(o *server.Server) core.Plugin {
-	return &OauthService{Oauth: o}
+func NewOauthService(o *server.Server, r *render.Render) core.Plugin {
+	return &OauthService{Oauth: o, Render: r}
 }
 
 func (my *OauthService) Name() string {
@@ -36,7 +37,7 @@ func (my *OauthService) Init(r chi.Router) {
 func (my *OauthService) tokenHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := my.Oauth.HandleTokenRequest(w, r); err != nil {
-			render.JSON(w, r, core.ERROR.WithData(err.Error()))
+			_ = my.Render.JSON(w, http.StatusOK, core.ERROR.WithData(err.Error()))
 		}
 	}
 }
@@ -44,7 +45,7 @@ func (my *OauthService) tokenHandler() func(w http.ResponseWriter, r *http.Reque
 func (my *OauthService) authorizeHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := my.Oauth.HandleAuthorizeRequest(w, r); err != nil {
-			render.JSON(w, r, core.ERROR.WithData(err.Error()))
+			_ = my.Render.JSON(w, http.StatusOK, core.ERROR.WithData(err.Error()))
 		}
 	}
 }
