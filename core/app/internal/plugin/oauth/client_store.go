@@ -7,15 +7,10 @@ import (
 	"github.com/go-oauth2/oauth2/v4/models"
 	"github.com/ichaly/go-api/core/app/pkg"
 	"github.com/json-iterator/go"
-	"github.com/json-iterator/go/extra"
 	"github.com/tidwall/gjson"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
-
-func init() {
-	extra.RegisterFuzzyDecoders()
-}
 
 type ClientStore struct {
 	Engine *serv.Service

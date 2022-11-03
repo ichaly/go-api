@@ -6,9 +6,14 @@ import (
 	"github.com/dosco/graphjin/serv"
 	"github.com/go-chi/chi"
 	"github.com/ichaly/go-api/core/app/pkg"
+	"github.com/json-iterator/go/extra"
 	"go.uber.org/fx"
 	"net/http"
 )
+
+func init() {
+	extra.RegisterFuzzyDecoders()
+}
 
 type Enhance struct {
 	fx.In
