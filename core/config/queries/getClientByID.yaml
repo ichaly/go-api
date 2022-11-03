@@ -1,8 +1,9 @@
 name: getClientByID
 query: |-
   query getClientByID($id: ID) {
-    clientsByID(id: $id) {
-      id
-      domain
-    }
-  }
+  	  clientsByID(id: $id) {
+  		id
+  		secret
+  		domain
+  	  }
+  	}
