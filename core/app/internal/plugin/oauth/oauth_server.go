@@ -6,12 +6,12 @@ import (
 	"github.com/go-oauth2/oauth2/v4/manage"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/ichaly/go-api/core/app/pkg"
-	"github.com/unrolled/render"
+	"github.com/ichaly/go-api/core/app/pkg/render"
 	"log"
 	"net/http"
 )
 
-func NewOauthServer(r *render.Render, t oauth2.TokenStore, s oauth2.ClientStore) *server.Server {
+func NewOauthServer(t oauth2.TokenStore, s oauth2.ClientStore) *server.Server {
 	manager := manage.NewDefaultManager()
 	manager.MustTokenStorage(t, nil)
 	manager.MapClientStorage(s)
@@ -20,7 +20,7 @@ func NewOauthServer(r *render.Render, t oauth2.TokenStore, s oauth2.ClientStore)
 	o.SetAllowGetAccessRequest(true)
 	o.SetClientInfoHandler(server.ClientFormHandler)
 	o.SetResponseTokenHandler(func(w http.ResponseWriter, data map[string]interface{}, header http.Header, statusCode ...int) error {
-		return r.JSON(w, http.StatusOK, core.OK.WithData(data))
+		return render.JSON(w, core.OK.WithData(data))
 	})
 	o.SetInternalErrorHandler(func(err error) (re *errors.Response) {
 		log.Println("Internal Error:", err.Error())

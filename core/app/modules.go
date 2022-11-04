@@ -5,7 +5,6 @@ import (
 	"github.com/ichaly/go-api/core/app/internal/plugin/captcha"
 	"github.com/ichaly/go-api/core/app/internal/plugin/oauth"
 	_ "github.com/ichaly/go-env/auto"
-	"github.com/unrolled/render"
 	"go.uber.org/fx"
 )
 
@@ -16,7 +15,6 @@ var Modules = fx.Options(
 		base.NewEngine,
 		base.NewServer,
 		base.NewCache,
-		render.New,
 	),
 	fx.Provide(fx.Annotated{
 		Group:  "plugin",

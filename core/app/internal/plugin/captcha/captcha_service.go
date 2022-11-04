@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/ichaly/go-api/core/app/internal/base"
 	"github.com/ichaly/go-api/core/app/pkg"
-	"github.com/unrolled/render"
+	"github.com/ichaly/go-api/core/app/pkg/render"
 	"github.com/wenlng/go-captcha/captcha"
 	"net/http"
 	"strconv"
@@ -17,14 +17,13 @@ import (
 
 type CaptchaService struct {
 	Config  *base.Config
-	Render  *render.Render
 	Captcha *captcha.Captcha
 	Store   *cache.Cache[string]
 }
 
-func NewCaptchaService(c *base.Config, r *render.Render, s *cache.Cache[string]) core.Plugin {
+func NewCaptchaService(c *base.Config, s *cache.Cache[string]) core.Plugin {
 	g := captcha.GetCaptcha()
-	return &CaptchaService{Store: s, Config: c, Captcha: g, Render: r}
+	return &CaptchaService{Store: s, Config: c, Captcha: g}
 }
 
 func (my *CaptchaService) Name() string {
@@ -88,7 +87,7 @@ func (my *CaptchaService) verifyHandler() func(w http.ResponseWriter, r *http.Re
 		if err != nil {
 			panic(err)
 		}
-		_ = my.Render.JSON(w, http.StatusOK, core.OK.WithData(data))
+		_ = render.JSON(w, core.OK.WithData(data))
 	}
 }
 
@@ -106,6 +105,6 @@ func (my *CaptchaService) generateHandler() func(w http.ResponseWriter, r *http.
 		if err != nil {
 			panic(err)
 		}
-		_ = my.Render.JSON(w, http.StatusOK, core.OK.WithData(map[string]string{"key": key, "image": image, "thumb": thumb}))
+		_ = render.JSON(w, core.OK.WithData(map[string]string{"key": key, "image": image, "thumb": thumb}))
 	}
 }
