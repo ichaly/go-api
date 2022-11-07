@@ -19,10 +19,18 @@ func NewOauthServer(t oauth2.TokenStore, s oauth2.ClientStore) *server.Server {
 	o.SetAllowGetAccessRequest(true)
 	o.SetClientInfoHandler(server.ClientFormHandler)
 	o.SetResponseTokenHandler(func(w http.ResponseWriter, data map[string]interface{}, header http.Header, statusCode ...int) error {
-		if len(statusCode) > 0 && statusCode[0] != 200 {
-			return render.JSON(w, core.NewResult(statusCode[0]).AddError(data["error"]))
-		} else {
+		code := 200
+		if len(statusCode) > 0 {
+			code = statusCode[0]
+		}
+		var err interface{}
+		if v, e := data["error"]; e {
+			err = v
+		}
+		if code == 200 {
 			return render.JSON(w, core.OK.WithData(data))
+		} else {
+			return render.JSON(w, core.NewResult(code).AddError(err))
 		}
 	})
 	o.SetInternalErrorHandler(func(err error) (re *errors.Response) {

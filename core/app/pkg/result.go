@@ -18,9 +18,13 @@ type result struct {
 
 // AddError 自定义错误信息
 func (res *result) AddError(message interface{}) result {
+	errors := res.Errors
+	if message != nil {
+		errors = append(errors, map[string]interface{}{"message": message})
+	}
 	return result{
 		Code:   res.Code,
-		Errors: append(res.Errors, map[string]interface{}{"message": message}),
+		Errors: errors,
 	}
 }
 
