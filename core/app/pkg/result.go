@@ -6,54 +6,51 @@ import (
 )
 
 var (
-	OK    = newResult(http.StatusOK, "ok")                     // 通用成功
-	ERROR = newResult(http.StatusInternalServerError, "error") // 通用错误
+	OK    = NewResult(http.StatusOK)                  // 通用成功
+	ERROR = NewResult(http.StatusInternalServerError) // 通用错误
 )
 
 type result struct {
-	Code    int         `json:"code"`    // 错误码
-	Message string      `json:"message"` // 错误描述
-	Data    interface{} `json:"data"`    // 返回数据
+	Code   int                      `json:"code"`             // 错误码
+	Data   interface{}              `json:"data,omitempty"`   // 返回数据
+	Errors []map[string]interface{} `json:"errors,omitempty"` // 错误信息
 }
 
-// WithMsg 自定义响应信息
-func (res *result) WithMsg(message string) result {
+// AddError 自定义错误信息
+func (res *result) AddError(message interface{}) result {
 	return result{
-		Code:    res.Code,
-		Message: message,
-		Data:    res.Data,
+		Code:   res.Code,
+		Errors: append(res.Errors, map[string]interface{}{"message": message}),
 	}
 }
 
 // WithData 追加响应数据
 func (res *result) WithData(data interface{}) result {
 	return result{
-		Code:    res.Code,
-		Message: res.Message,
-		Data:    data,
+		Code: res.Code,
+		Data: data,
 	}
 }
 
 // ToString 返回 JSON 格式的错误详情
 func (res *result) ToString() string {
 	err := &struct {
-		Code    int         `json:"code"`
-		Message string      `json:"message"`
-		Data    interface{} `json:"data"`
+		Code   int                      `json:"code"`
+		Data   interface{}              `json:"data,omitempty"`
+		Errors []map[string]interface{} `json:"errors,omitempty"`
 	}{
-		Code:    res.Code,
-		Message: res.Message,
-		Data:    res.Data,
+		Code:   res.Code,
+		Data:   res.Data,
+		Errors: res.Errors,
 	}
 	raw, _ := json.Marshal(err)
 	return string(raw)
 }
 
-// 构造函数
-func newResult(code int, msg string) *result {
+// NewResult 构造函数
+func NewResult(code int) *result {
 	return &result{
-		Code:    code,
-		Message: msg,
-		Data:    nil,
+		Code: code,
+		Data: nil,
 	}
 }
