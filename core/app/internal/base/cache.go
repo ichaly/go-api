@@ -1,0 +1,117 @@
+package base
+
+import (
+	"context"
+	"database/sql"
+	"fmt"
+	"github.com/eko/gocache/v3/cache"
+	"github.com/eko/gocache/v3/store"
+	"github.com/ichaly/go-api/core/app/pkg/util"
+	"github.com/json-iterator/go"
+	"golang.org/x/sync/singleflight"
+	"gorm.io/gorm"
+	"gorm.io/gorm/callbacks"
+	"time"
+)
+
+// https://github.com/liyuan1125/gorm-cache/blob/master/cache.go
+var (
+	requestGroup singleflight.Group
+	json         = jsoniter.ConfigCompatibleWithStandardLibrary
+)
+
+type keyCacheContext struct{}
+
+type Cache struct {
+	Cache       *cache.Cache[string]
+	exp         time.Duration
+	keyGenerate func(*gorm.DB) string
+}
+
+// Name `gorm.Plugin` implements.
+func (my Cache) Name() string { return "gorm-cache" }
+
+func NewCache(s *cache.Cache[string]) Cache {
+	return Cache{s, 30 * time.Minute, func(db *gorm.DB) string {
+		return fmt.Sprintf(
+			"%s:%s",
+			db.Statement.Table,
+			util.MD5(db.Dialector.Explain(db.Statement.SQL.String(), db.Statement.Vars...)),
+		)
+	},
+	}
+}
+
+// Initialize `gorm.Plugin` implements.
+func (my Cache) Initialize(db *gorm.DB) error {
+	if err := db.Callback().Query().Replace("gorm:query", my.query); err != nil {
+		return err
+	}
+	if err := db.Callback().Create().After("gorm:create").Register(my.Name()+":after_create", my.afterUpdate); err != nil {
+		return err
+	}
+	if err := db.Callback().Update().After("gorm:update").Register(my.Name()+":after_update", my.afterUpdate); err != nil {
+		return err
+	}
+	if err := db.Callback().Delete().After("gorm:delete").Register(my.Name()+":after_delete", my.afterUpdate); err != nil {
+		return err
+	}
+	return nil
+}
+
+// query replace gorm:query
+func (my Cache) query(db *gorm.DB) {
+	if db.DryRun || db.Error != nil {
+		return
+	}
+	callbacks.BuildQuerySQL(db)
+	cacheKey := my.keyGenerate(db)
+
+	// get from cache
+	val, err := my.Cache.Get(db.Statement.Context, cacheKey)
+	if err == nil {
+		if err = json.UnmarshalFromString(val, db.Statement.Dest); err == nil {
+			return
+		}
+	}
+
+	// get from db
+	my.queryFromDB(db, cacheKey)
+
+	// add to cache
+	if val, err = json.MarshalToString(db.Statement.Dest); err == nil {
+		_ = my.Cache.Set(db.Statement.Context, cacheKey, val)
+	}
+}
+
+func (my Cache) afterUpdate(db *gorm.DB) {
+	total := db.Statement.RowsAffected
+	if total <= 0 {
+		return
+	}
+
+	if err := my.Cache.Invalidate(db.Statement.Context, store.WithInvalidateTags([]string{db.Statement.Table})); err != nil {
+		_ = db.AddError(err)
+	}
+}
+
+func (my Cache) queryFromDB(db *gorm.DB, cacheKey string) {
+	var (
+		rows *sql.Rows
+		err  error
+	)
+	var val interface{}
+	val, err, _ = requestGroup.Do(cacheKey, func() (interface{}, error) {
+		db.Statement.Context = context.WithValue(db.Statement.Context, keyCacheContext{}, 1)
+		return db.Statement.ConnPool.QueryContext(db.Statement.Context, db.Statement.SQL.String(), db.Statement.Vars...)
+	})
+	rows = val.(*sql.Rows)
+	if err != nil {
+		_ = db.AddError(err)
+		return
+	}
+	defer func(rows *sql.Rows) {
+		_ = rows.Close()
+	}(rows)
+	gorm.Scan(rows, db, 0)
+}

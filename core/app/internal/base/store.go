@@ -1,6 +1,7 @@
 package base
 
 import (
+	"fmt"
 	"github.com/allegro/bigcache"
 	"github.com/eko/gocache/v3/cache"
 	"github.com/eko/gocache/v3/store"
@@ -12,8 +13,9 @@ import (
 func NewStore(c *Config) (*cache.Cache[string], error) {
 	var s store.StoreInterface
 	if strings.ToLower(c.Cache.Type) == "redis" {
+		args := []interface{}{c.Cache.Host, c.Cache.Port}
 		s = store.NewRedis(redis.NewClient(&redis.Options{
-			Addr:     c.Cache.Host,
+			Addr:     fmt.Sprintf("%s:%d", args...),
 			Username: c.Cache.User,
 			Password: c.Cache.Password,
 		}))

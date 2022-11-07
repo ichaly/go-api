@@ -193,6 +193,12 @@ auths:
       name: X-Appengine-Cron
       exists: true
 
+cache:
+  type: redis
+  host: 127.0.0.1
+  port: 6379
+  password: redis123
+
 # Postgres related environment Variables
 # GJ_DATABASE_HOST
 # GJ_DATABASE_PORT

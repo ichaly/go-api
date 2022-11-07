@@ -2,7 +2,7 @@ package base
 
 import (
 	"github.com/dosco/graphjin/serv"
-	"github.com/ichaly/go-api/core/app/internal/util"
+	"github.com/ichaly/go-api/core/app/pkg/util"
 	"image/color"
 	"path"
 )

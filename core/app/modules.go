@@ -12,6 +12,7 @@ var Modules = fx.Options(
 	fx.Provide(
 		base.NewConfig,
 		base.NewStore,
+		base.NewCache,
 		base.NewDatabase,
 		base.NewEngine,
 		base.NewServer,

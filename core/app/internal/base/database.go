@@ -9,8 +9,16 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func NewDatabase(c *Config) (*gorm.DB, error) {
-	return gorm.Open(buildDialect(c.Engine.DB), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
+func NewDatabase(che Cache, c *Config) (*gorm.DB, error) {
+	db, err := gorm.Open(buildDialect(c.Engine.DB), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
+	if err != nil {
+		return nil, err
+	}
+	err = db.Use(che)
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
 }
 
 func buildDialect(ds serv.Database) gorm.Dialector {
