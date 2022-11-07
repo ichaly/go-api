@@ -5,12 +5,9 @@ import (
 	"github.com/dosco/graphjin/serv"
 	"github.com/go-oauth2/oauth2/v4"
 	"github.com/go-oauth2/oauth2/v4/models"
-	"github.com/json-iterator/go"
 	"github.com/mitchellh/mapstructure"
 	"gorm.io/gorm"
 )
-
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type ClientStore struct {
 	Engine   *serv.Service
