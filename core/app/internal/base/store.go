@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func NewCache(c *Config) (*cache.Cache[string], error) {
+func NewStore(c *Config) (*cache.Cache[string], error) {
 	var s store.StoreInterface
 	if strings.ToLower(c.Cache.Type) == "redis" {
 		s = store.NewRedis(redis.NewClient(&redis.Options{

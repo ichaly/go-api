@@ -9,28 +9,28 @@ import (
 	"net/http"
 )
 
-type TokenVerify struct {
+type verify struct {
 	Oauth *server.Server
 }
 
-func NewOauthTokenVerify(s *server.Server) core.Plugin {
-	return &TokenVerify{Oauth: s}
+func NewOauthVerify(s *server.Server) core.Plugin {
+	return &verify{Oauth: s}
 }
 
-func (my *TokenVerify) Name() string {
-	return "OauthTokenVerify"
+func (my *verify) Name() string {
+	return "OauthVerify"
 }
 
-func (my *TokenVerify) Protected() bool {
+func (my *verify) Protected() bool {
 	return true
 }
 
-func (my *TokenVerify) Init(r chi.Router) {
+func (my *verify) Init(r chi.Router) {
 	//使用中间件鉴权
 	r.Use(my.verifyHandler)
 }
 
-func (my *TokenVerify) verifyHandler(next http.Handler) http.Handler {
+func (my *verify) verifyHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), "user", "123")
 		if _, err := my.Oauth.ValidationBearerToken(r); err != nil {

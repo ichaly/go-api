@@ -11,10 +11,10 @@ import (
 var Modules = fx.Options(
 	fx.Provide(
 		base.NewConfig,
+		base.NewStore,
 		base.NewDatabase,
 		base.NewEngine,
 		base.NewServer,
-		base.NewCache,
 	),
 	fx.Provide(fx.Annotated{
 		Group:  "plugin",
@@ -28,10 +28,10 @@ var Modules = fx.Options(
 			Group:  "plugin",
 			Target: oauth.NewOauthService,
 		},
-		//fx.Annotated{
-		//	Group:  "middleware",
-		//	Target: oauth.NewOauthTokenVerify,
-		//},
+		fx.Annotated{
+			Group:  "middleware",
+			Target: oauth.NewOauthVerify,
+		},
 	),
 	fx.Invoke(base.Bootstrap),
 )
