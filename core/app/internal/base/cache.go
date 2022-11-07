@@ -80,7 +80,7 @@ func (my Cache) query(db *gorm.DB) {
 
 	// add to cache
 	if val, err = json.MarshalToString(db.Statement.Dest); err == nil {
-		_ = my.Cache.Set(db.Statement.Context, cacheKey, val)
+		_ = my.Cache.Set(db.Statement.Context, cacheKey, val, store.WithExpiration(my.exp), store.WithTags([]string{db.Statement.Table}))
 	}
 }
 
