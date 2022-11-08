@@ -34,7 +34,7 @@ func (my *verify) verifyHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), "user", "123")
 		if _, err := my.Oauth.ValidationBearerToken(r); err != nil {
-			_ = render.JSON(w, core.ERROR.WithData(err.Error()))
+			_ = render.JSON(w, core.ERROR.AddError(err.Error()))
 		} else {
 			next.ServeHTTP(w, r.WithContext(ctx))
 		}
