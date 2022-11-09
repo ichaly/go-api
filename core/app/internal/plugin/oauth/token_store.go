@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/eko/gocache/v3/cache"
-	cacheStore "github.com/eko/gocache/v3/store"
+	"github.com/eko/gocache/v3/store"
 	"github.com/go-oauth2/oauth2/v4"
 	"github.com/go-oauth2/oauth2/v4/models"
 	"github.com/google/uuid"
@@ -34,7 +34,7 @@ func (my *TokenStore) Create(ctx context.Context, info oauth2.TokenInfo) error {
 	}
 
 	if code := info.GetCode(); code != "" {
-		return my.Cache.Set(ctx, my.keyGenerate(code), jv, cacheStore.WithExpiration(info.GetCodeExpiresIn()))
+		return my.Cache.Set(ctx, my.keyGenerate(code), jv, store.WithExpiration(info.GetCodeExpiresIn()))
 	}
 
 	basicID := uuid.Must(uuid.NewRandom()).String()
@@ -48,17 +48,17 @@ func (my *TokenStore) Create(ctx context.Context, info oauth2.TokenInfo) error {
 			aexp = rexp
 		}
 		if info.GetRefreshExpiresIn() != 0 {
-			if err := my.Cache.Set(ctx, my.keyGenerate(refresh), basicID, cacheStore.WithExpiration(rexp)); err != nil {
+			if err := my.Cache.Set(ctx, my.keyGenerate(refresh), basicID, store.WithExpiration(rexp)); err != nil {
 				return err
 			}
 		}
 	}
 
-	if err = my.Cache.Set(ctx, my.keyGenerate(basicID), jv, cacheStore.WithExpiration(rexp)); err != nil {
+	if err = my.Cache.Set(ctx, my.keyGenerate(basicID), jv, store.WithExpiration(rexp)); err != nil {
 		return err
 	}
 
-	return my.Cache.Set(ctx, my.keyGenerate(info.GetAccess()), basicID, cacheStore.WithExpiration(aexp))
+	return my.Cache.Set(ctx, my.keyGenerate(info.GetAccess()), basicID, store.WithExpiration(aexp))
 }
 
 // RemoveByCode delete the authorization code
