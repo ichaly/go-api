@@ -37,32 +37,27 @@ func (my *Engine) Attach(r chi.Router) {
 
 func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
 
 		if websocket.IsWebSocketUpgrade(r) {
 			//TODO: s.apiV1Ws(w, r, ah)
 			return
 		}
-		var err error
 		var req gqlReq
 
 		switch r.Method {
-		case "POST":
-			var b []byte
-			b, err = io.ReadAll(io.LimitReader(r.Body, maxReadBytes))
-			if err == nil {
+		case http.MethodPost:
+			if b, err := io.ReadAll(io.LimitReader(r.Body, maxReadBytes)); err == nil {
 				defer r.Body.Close()
 				err = json.Unmarshal(b, &req)
 			}
-
-		case "GET":
+		case http.MethodGet:
 			q := r.URL.Query()
 			req.Query = q.Get("query")
 			req.OpName = q.Get("operationName")
 			req.Vars = []byte(q.Get("variables"))
 
 			if ext := q.Get("extensions"); ext != "" {
-				err = json.UnmarshalFromString(ext, &req.Ext)
+				_ = json.UnmarshalFromString(ext, &req.Ext)
 			}
 		}
 
