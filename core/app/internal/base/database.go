@@ -2,7 +2,6 @@ package base
 
 import (
 	"fmt"
-	"github.com/dosco/graphjin/serv"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -10,7 +9,7 @@ import (
 )
 
 func NewDatabase(che Cache, c *Config) (*gorm.DB, error) {
-	db, err := gorm.Open(buildDialect(c.Engine.DB), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
+	db, err := gorm.Open(buildDialect(c.Database), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
 	if err != nil {
 		return nil, err
 	}
@@ -21,8 +20,8 @@ func NewDatabase(che Cache, c *Config) (*gorm.DB, error) {
 	return db, nil
 }
 
-func buildDialect(ds serv.Database) gorm.Dialector {
-	args := []interface{}{ds.User, ds.Password, ds.Host, ds.Port, ds.DBName}
+func buildDialect(ds *Database) gorm.Dialector {
+	args := []interface{}{ds.Username, ds.Password, ds.Host, ds.Port, ds.Name}
 	if ds.Type == "mysql" {
 		return mysql.Open(fmt.Sprintf(
 			"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", args...,

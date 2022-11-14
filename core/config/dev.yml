@@ -209,8 +209,8 @@ database:
   type: postgres
   host: 127.0.0.1
   port: 5432
-  dbname: blog_development
-  user: postgres
+  name: blog_development
+  username: postgres
   password: postgres
   #schema: "public"
 

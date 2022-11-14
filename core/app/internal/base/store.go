@@ -16,7 +16,7 @@ func NewStore(c *Config) (*cache.Cache[string], error) {
 		args := []interface{}{c.Cache.Host, c.Cache.Port}
 		s = store.NewRedis(redis.NewClient(&redis.Options{
 			Addr:     fmt.Sprintf("%s:%d", args...),
-			Username: c.Cache.User,
+			Username: c.Cache.Username,
 			Password: c.Cache.Password,
 		}))
 	} else {

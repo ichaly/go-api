@@ -29,7 +29,7 @@ func (my *ExplorerService) Protected() bool {
 }
 
 func (my *ExplorerService) Init(r chi.Router) {
-	if my.Config.Engine.Core.Production {
+	if my.Config.Core.Production {
 		return
 	}
 

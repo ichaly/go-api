@@ -3,7 +3,6 @@ package base
 import (
 	"context"
 	"fmt"
-	"github.com/dosco/graphjin/serv"
 	"github.com/go-chi/chi"
 	"github.com/ichaly/go-api/core/app/pkg"
 	"github.com/json-iterator/go/extra"
@@ -22,7 +21,7 @@ type Enhance struct {
 }
 
 func Bootstrap(
-	l fx.Lifecycle, s *serv.Service, r *chi.Mux, c *Config, e Enhance,
+	l fx.Lifecycle, s *Engine, r *chi.Mux, c *Config, e Enhance,
 ) {
 	//init middlewares
 	for _, m := range e.Middlewares {
@@ -37,7 +36,7 @@ func Bootstrap(
 				m.Init(r)
 			}
 		}
-		_ = s.Attach(r)
+		s.Attach(r)
 		for _, p := range e.Plugins {
 			if p.Protected() {
 				p.Init(r)
@@ -60,10 +59,6 @@ func Bootstrap(
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
-			db := s.GetDB()
-			if db != nil {
-				_ = db.Close()
-			}
 			fmt.Printf("%s shutdown complete", c.AppName)
 			return nil
 		},
