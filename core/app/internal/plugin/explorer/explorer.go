@@ -10,7 +10,7 @@ import (
 )
 
 //go:embed html
-var staticBuild embed.FS
+var html embed.FS
 
 type ExplorerService struct {
 	Config *base.Config
@@ -33,9 +33,9 @@ func (my *ExplorerService) Init(r chi.Router) {
 		return
 	}
 
-	if webRoot, err := fs.Sub(staticBuild, "html"); err == nil {
+	if root, err := fs.Sub(html, "html"); err == nil {
 		r.Route("/api", func(r chi.Router) {
-			r.Handle("/*", http.StripPrefix("/api/", http.FileServer(http.FS(webRoot))))
+			r.Handle("/*", http.FileServer(http.FS(root)))
 		})
 	}
 }
