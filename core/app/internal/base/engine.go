@@ -2,9 +2,11 @@ package base
 
 import (
 	"github.com/dosco/graphjin/core"
+	"github.com/eko/gocache/v3/cache"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
 	"github.com/ichaly/go-api/core/app/pkg/render"
+	"github.com/ichaly/go-api/core/app/pkg/util"
 	"gorm.io/gorm"
 	"io"
 	"net/http"
@@ -15,10 +17,11 @@ const (
 )
 
 type Engine struct {
-	jin *core.GraphJin
+	Graph *core.GraphJin
+	Cache *cache.Cache[string]
 }
 
-func NewEngine(c *Config, d *gorm.DB) (*Engine, error) {
+func NewEngine(c *Config, d *gorm.DB, s *cache.Cache[string]) (*Engine, error) {
 	db, err := d.DB()
 	if err != nil {
 		return nil, err
@@ -27,8 +30,7 @@ func NewEngine(c *Config, d *gorm.DB) (*Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Engine{jin: jin}, nil
-
+	return &Engine{Graph: jin, Cache: s}, nil
 }
 
 func (my *Engine) Attach(r chi.Router) {
@@ -61,7 +63,21 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 			}
 		}
 
-		if res, err := my.jin.GraphQL(r.Context(), req.Query, req.Vars, nil); err == nil {
+		var key string
+		if str, err := json.MarshalToString(req); err != nil {
+			key = util.MD5(str)
+			if len(key) > 0 {
+				if val, err := my.Cache.Get(r.Context(), key); err != nil {
+					var res *core.Result
+					if err := json.UnmarshalFromString(val, res); err != nil {
+						_ = render.JSON(w, res)
+						return
+					}
+				}
+			}
+		}
+
+		if res, err := my.Graph.GraphQL(r.Context(), req.Query, req.Vars, nil); err == nil {
 			_ = render.JSON(w, res)
 		}
 	}
