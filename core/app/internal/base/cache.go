@@ -34,8 +34,7 @@ func (my Cache) Name() string { return "gorm-cache" }
 func NewCache(s *cache.Cache[string]) Cache {
 	return Cache{s, 30 * time.Minute, func(db *gorm.DB) string {
 		return fmt.Sprintf(
-			"%s:%s",
-			db.Statement.Table,
+			"cache:%s",
 			util.MD5(db.Dialector.Explain(db.Statement.SQL.String(), db.Statement.Vars...)),
 		)
 	},

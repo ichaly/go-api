@@ -1,8 +1,10 @@
 package base
 
 import (
+	"fmt"
 	"github.com/dosco/graphjin/core"
 	"github.com/eko/gocache/v3/cache"
+	"github.com/eko/gocache/v3/store"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
 	"github.com/ichaly/go-api/core/app/pkg/render"
@@ -64,12 +66,12 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 		}
 
 		var key string
-		if str, err := json.MarshalToString(req); err != nil {
-			key = util.MD5(str)
+		if str, err := json.MarshalToString(req); err == nil {
+			key = fmt.Sprintf("cache:%s", util.MD5(str))
 			if len(key) > 0 {
-				if val, err := my.Cache.Get(r.Context(), key); err != nil {
-					var res *core.Result
-					if err := json.UnmarshalFromString(val, res); err != nil {
+				if val, err := my.Cache.Get(r.Context(), key); err == nil {
+					res := &core.Result{}
+					if err := json.UnmarshalFromString(val, res); err == nil {
 						_ = render.JSON(w, res)
 						return
 					}
@@ -79,6 +81,15 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 
 		if res, err := my.Graph.GraphQL(r.Context(), req.Query, req.Vars, nil); err == nil {
 			_ = render.JSON(w, res)
+			if len(key) > 0 {
+				if core.OpQuery == res.Operation() {
+					if val, err := json.MarshalToString(res); err == nil {
+						_ = my.Cache.Set(r.Context(), key, val, store.WithTags(res.Tables()))
+					}
+				} else {
+					_ = my.Cache.Invalidate(r.Context(), store.WithInvalidateTags(res.Tables()))
+				}
+			}
 		}
 	}
 }
