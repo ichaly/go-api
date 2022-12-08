@@ -67,7 +67,7 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 
 		var key string
 		if str, err := json.MarshalToString(req); err == nil {
-			key = fmt.Sprintf("cache:%s", util.MD5(str))
+			key = fmt.Sprintf("gql:%s", util.MD5(str))
 			if len(key) > 0 {
 				if val, err := my.Cache.Get(r.Context(), key); err == nil {
 					res := &core.Result{}
@@ -81,7 +81,7 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 
 		if res, err := my.Graph.GraphQL(r.Context(), req.Query, req.Vars, nil); err == nil {
 			_ = render.JSON(w, res)
-			if len(key) > 0 {
+			if len(key) > 0 && len(res.Errors) == 0 {
 				if core.OpQuery == res.Operation() {
 					if val, err := json.MarshalToString(res); err == nil {
 						_ = my.Cache.Set(r.Context(), key, val, store.WithTags(res.Tables()))
