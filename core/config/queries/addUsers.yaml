@@ -1,0 +1,19 @@
+name: addUsers
+query: |-
+  mutation addUsers($data: [usersInput!]) {
+    users(insert: $data) {
+      id
+      email
+      full_name
+    }
+  }
+vars: |-
+  {
+    "data": [
+      {
+        "id": 0.0,
+        "email": "",
+        "full_name": ""
+      }
+    ]
+  }

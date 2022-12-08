@@ -1,9 +1,14 @@
 name: getClientByID
 query: |-
   query getClientByID($id: ID) {
-  	  clientsByID(id: $id) {
-  		id
-  		secret
-  		domain
-  	  }
-  	}
+    clientsByID(id: $id) {
+      id
+      secret
+      domain
+    }
+    users(id: 1) {
+      id
+      full_name
+      email
+    }
+  }

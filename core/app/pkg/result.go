@@ -16,15 +16,16 @@ type result struct {
 	Errors []map[string]interface{} `json:"errors,omitempty"` // 错误信息
 }
 
-// AddError 自定义错误信息
-func (res *result) AddError(message interface{}) result {
-	errors := res.Errors
-	if message != nil {
-		errors = append(errors, map[string]interface{}{"message": message})
+// WithError 自定义错误信息
+func (res *result) WithError(errors ...error) result {
+	if errors != nil && len(errors) > 0 {
+		for _, e := range errors {
+			res.Errors = append(res.Errors, map[string]interface{}{"message": e.Error()})
+		}
 	}
 	return result{
 		Code:   res.Code,
-		Errors: errors,
+		Errors: res.Errors,
 	}
 }
 

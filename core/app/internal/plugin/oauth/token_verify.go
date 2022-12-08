@@ -34,7 +34,7 @@ func (my *verify) Init(r chi.Router) {
 func (my *verify) verifyHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if token, err := my.Oauth.ValidationBearerToken(r); err != nil {
-			_ = render.JSON(w, core.ERROR.AddError(err.Error()))
+			_ = render.JSON(w, core.ERROR.WithError(err))
 		} else {
 			ctx := context.WithValue(r.Context(), gql.UserIDKey, token.GetUserID())
 			next.ServeHTTP(w, r.WithContext(ctx))

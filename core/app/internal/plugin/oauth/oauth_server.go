@@ -1,8 +1,10 @@
 package oauth
 
 import (
+	"errors"
+	"fmt"
 	"github.com/go-oauth2/oauth2/v4"
-	"github.com/go-oauth2/oauth2/v4/errors"
+	oauth2Errors "github.com/go-oauth2/oauth2/v4/errors"
 	"github.com/go-oauth2/oauth2/v4/manage"
 	"github.com/go-oauth2/oauth2/v4/server"
 	"github.com/ichaly/go-api/core/app/pkg"
@@ -23,18 +25,18 @@ func NewOauthServer(t oauth2.TokenStore, s oauth2.ClientStore) *server.Server {
 		if len(statusCode) > 0 {
 			code = statusCode[0]
 		}
-		var err interface{}
-		if v, e := data["error"]; e {
-			err = v
-		}
 		if code == 200 {
 			return render.JSON(w, core.OK.WithData(data))
 		} else {
-			return render.JSON(w, core.NewResult(code).AddError(err))
+			var err error
+			if v, e := data["error"]; e {
+				err = errors.New(fmt.Sprintf("%v", v))
+			}
+			return render.JSON(w, core.NewResult(code).WithError(err))
 		}
 	})
-	o.SetInternalErrorHandler(func(err error) (re *errors.Response) {
-		return errors.NewResponse(err, http.StatusInternalServerError)
+	o.SetInternalErrorHandler(func(err error) (re *oauth2Errors.Response) {
+		return oauth2Errors.NewResponse(err, http.StatusInternalServerError)
 	})
 
 	return o

@@ -1,12 +1,14 @@
 package base
 
 import (
+	eson "encoding/json"
 	"fmt"
-	"github.com/dosco/graphjin/core"
+	gql "github.com/dosco/graphjin/core"
 	"github.com/eko/gocache/v3/cache"
 	"github.com/eko/gocache/v3/store"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
+	"github.com/ichaly/go-api/core/app/pkg"
 	"github.com/ichaly/go-api/core/app/pkg/render"
 	"github.com/ichaly/go-api/core/app/pkg/util"
 	"gorm.io/gorm"
@@ -19,7 +21,7 @@ const (
 )
 
 type Engine struct {
-	Graph *core.GraphJin
+	Graph *gql.GraphJin
 	Cache *cache.Cache[string]
 }
 
@@ -28,7 +30,7 @@ func NewEngine(c *Config, d *gorm.DB, s *cache.Cache[string]) (*Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	jin, err := core.NewGraphJin(&c.Core, db)
+	jin, err := gql.NewGraphJin(&c.Core, db)
 	if err != nil {
 		return nil, err
 	}
@@ -66,23 +68,25 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 		}
 
 		var key string
-		if str, err := json.MarshalToString(req); err == nil {
-			key = fmt.Sprintf("gql:%s", util.MD5(str))
-			if len(key) > 0 {
-				if val, err := my.Cache.Get(r.Context(), key); err == nil {
-					res := &core.Result{}
-					if err := json.UnmarshalFromString(val, res); err == nil {
-						_ = render.JSON(w, res)
-						return
+		if req.OpName != "IntrospectionQuery" {
+			if str, err := json.MarshalToString(req); err == nil {
+				key = fmt.Sprintf("gql:%v", util.MD5(str))
+				if len(key) > 0 {
+					if val, err := my.Cache.Get(r.Context(), key); err == nil {
+						reps := &gqlResp{Code: 200, Result: &gql.Result{}}
+						if err := json.UnmarshalFromString(val, reps); err == nil {
+							_ = render.JSON(w, reps)
+							return
+						}
 					}
 				}
 			}
 		}
 
 		if res, err := my.Graph.GraphQL(r.Context(), req.Query, req.Vars, nil); err == nil {
-			_ = render.JSON(w, res)
+			_ = render.JSON(w, gqlResp{Code: 200, Result: res})
 			if len(key) > 0 && len(res.Errors) == 0 {
-				if core.OpQuery == res.Operation() {
+				if gql.OpQuery == res.Operation() {
 					if val, err := json.MarshalToString(res); err == nil {
 						_ = my.Cache.Set(r.Context(), key, val, store.WithTags(res.Tables()))
 					}
@@ -90,22 +94,29 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 					_ = my.Cache.Invalidate(r.Context(), store.WithInvalidateTags(res.Tables()))
 				}
 			}
+		} else {
+			_ = render.JSON(w, core.ERROR.WithError(err))
 		}
 	}
 }
 
 type gqlReq struct {
-	OpName string     `json:"operationName"`
-	Query  string     `json:"query"`
-	Vars   []byte     `json:"variables"`
-	Ext    extensions `json:"extensions"`
+	OpName string          `json:"operationName"`
+	Query  string          `json:"query"`
+	Vars   eson.RawMessage `json:"variables,omitempty"`
+	Ext    extensions      `json:"extensions,omitempty"`
 }
 
 type extensions struct {
-	Persisted apqExt `json:"persistedQuery"`
+	Persisted apqExt `json:"persistedQuery,omitempty"`
 }
 
 type apqExt struct {
 	Version    int    `json:"version"`
 	Sha256Hash string `json:"sha256Hash"`
+}
+
+type gqlResp struct {
+	Code int `json:"code"`
+	*gql.Result
 }

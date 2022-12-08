@@ -36,7 +36,7 @@ func (my *OauthService) Init(r chi.Router) {
 func (my *OauthService) tokenHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := my.Oauth.HandleTokenRequest(w, r); err != nil {
-			_ = render.JSON(w, core.ERROR.AddError(err.Error()))
+			_ = render.JSON(w, core.ERROR.WithError(err))
 		}
 	}
 }
@@ -44,7 +44,7 @@ func (my *OauthService) tokenHandler() func(w http.ResponseWriter, r *http.Reque
 func (my *OauthService) authorizeHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := my.Oauth.HandleAuthorizeRequest(w, r); err != nil {
-			_ = render.JSON(w, core.ERROR.AddError(err.Error()))
+			_ = render.JSON(w, core.ERROR.WithError(err))
 		}
 	}
 }
