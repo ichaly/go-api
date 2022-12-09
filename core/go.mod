@@ -14,6 +14,7 @@ require (
 	github.com/ichaly/go-env v0.0.1
 	github.com/json-iterator/go v1.1.12
 	github.com/natefinch/lumberjack v2.0.0+incompatible
+	github.com/sony/sonyflake v1.1.0
 	github.com/spf13/viper v1.14.0
 	github.com/unrolled/render v1.5.0
 	github.com/wenlng/go-captcha v1.2.5

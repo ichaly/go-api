@@ -1,6 +1,7 @@
 package base
 
 import (
+	"context"
 	eson "encoding/json"
 	"fmt"
 	gql "github.com/dosco/graphjin/core"
@@ -14,10 +15,14 @@ import (
 	"gorm.io/gorm"
 	"io"
 	"net/http"
+	"strconv"
 )
 
 const (
-	maxReadBytes = 100000 // 100Kb
+	maxReadBytes       = 100000 // 100Kb
+	bigId              = "big_id"
+	graphqlEndpoint    = "/api/v1/graphql"
+	introspectionQuery = "IntrospectionQuery"
 )
 
 type Engine struct {
@@ -38,7 +43,7 @@ func NewEngine(c *Config, d *gorm.DB, s *cache.Cache[string]) (*Engine, error) {
 }
 
 func (my *Engine) Attach(r chi.Router) {
-	r.HandleFunc("/api/v1/graphql", my.graphqlHandler())
+	r.HandleFunc(graphqlEndpoint, my.graphqlHandler())
 }
 
 func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) {
@@ -66,9 +71,9 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 				_ = json.UnmarshalFromString(ext, &req.Ext)
 			}
 		}
-
+		// 从缓存中获取数据
 		var key string
-		if req.OpName != "IntrospectionQuery" {
+		if req.OpName != introspectionQuery {
 			if str, err := json.MarshalToString(req); err == nil {
 				key = fmt.Sprintf("gql:%v", util.MD5(str))
 				if len(key) > 0 {
@@ -82,9 +87,14 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 				}
 			}
 		}
-
-		if res, err := my.Graph.GraphQL(r.Context(), req.Query, req.Vars, nil); err == nil {
+		// 存储当前登陆者id
+		ctx := context.WithValue(r.Context(), gql.UserIDKey, 101)
+		// 配置雪花id生成
+		rc := &gql.ReqConfig{Vars: map[string]interface{}{bigId: getBigId}}
+		// 执行GraphQL结果
+		if res, err := my.Graph.GraphQL(ctx, req.Query, req.Vars, rc); err == nil {
 			_ = render.JSON(w, gqlResp{Code: 200, Result: res})
+			// 存储到缓存中
 			if len(key) > 0 && len(res.Errors) == 0 {
 				if gql.OpQuery == res.Operation() {
 					if val, err := json.MarshalToString(res); err == nil {
@@ -98,6 +108,13 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 			_ = render.JSON(w, core.ERROR.WithError(err))
 		}
 	}
+}
+
+func getBigId() string {
+	if id, err := GenerateID(); err == nil {
+		return strconv.FormatUint(id, 10)
+	}
+	return ""
 }
 
 type gqlReq struct {
