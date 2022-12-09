@@ -1,7 +1,6 @@
 package base
 
 import (
-	"context"
 	eson "encoding/json"
 	"fmt"
 	gql "github.com/dosco/graphjin/core"
@@ -87,12 +86,10 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 				}
 			}
 		}
-		// 存储当前登陆者id
-		ctx := context.WithValue(r.Context(), gql.UserIDKey, 101)
 		// 配置雪花id生成
 		rc := &gql.ReqConfig{Vars: map[string]interface{}{bigId: getBigId}}
 		// 执行GraphQL结果
-		if res, err := my.Graph.GraphQL(ctx, req.Query, req.Vars, rc); err == nil {
+		if res, err := my.Graph.GraphQL(r.Context(), req.Query, req.Vars, rc); err == nil {
 			_ = render.JSON(w, gqlResp{Code: 200, Result: res})
 			// 存储到缓存中
 			if len(key) > 0 && len(res.Errors) == 0 {

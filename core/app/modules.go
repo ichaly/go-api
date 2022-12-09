@@ -34,10 +34,10 @@ var Modules = fx.Options(
 			Group:  "plugin",
 			Target: oauth.NewOauthService,
 		},
-		//fx.Annotated{
-		//	Group:  "middleware",
-		//	Target: oauth.NewOauthVerify,
-		//},
+		fx.Annotated{
+			Group:  "middleware",
+			Target: oauth.NewOauthVerify,
+		},
 	),
 	fx.Invoke(base.Bootstrap),
 )
