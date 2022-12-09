@@ -8,6 +8,7 @@ import (
 	"github.com/eko/gocache/v3/store"
 	"github.com/go-chi/chi"
 	"github.com/gorilla/websocket"
+	"github.com/ichaly/go-api/core/app/internal/json"
 	"github.com/ichaly/go-api/core/app/pkg"
 	"github.com/ichaly/go-api/core/app/pkg/render"
 	"github.com/ichaly/go-api/core/app/pkg/util"
@@ -58,7 +59,7 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 		case http.MethodPost:
 			if b, err := io.ReadAll(io.LimitReader(r.Body, maxReadBytes)); err == nil {
 				defer r.Body.Close()
-				err = json.Unmarshal(b, &req)
+				_ = json.Unmarshal(b, &req)
 			}
 		case http.MethodGet:
 			q := r.URL.Query()

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/dosco/graphjin/core"
 	"github.com/ichaly/go-api/core/app/pkg/util"
-	"github.com/json-iterator/go"
 	"github.com/spf13/viper"
 	"image/color"
 	"os"
@@ -12,8 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 )
-
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 type Core = core.Config
 
