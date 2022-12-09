@@ -315,11 +315,9 @@ roles:
   #       query:
   #         limit: 10
 
-  - name: user
+  - name: anon
     tables:
       - name: users
-        query:
-          filters: ["{ id: { _eq: $user_id } }"]
         insert:
           presets:
             - id: "$big_id"
