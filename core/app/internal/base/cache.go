@@ -7,18 +7,13 @@ import (
 	"github.com/eko/gocache/v3/cache"
 	"github.com/eko/gocache/v3/store"
 	"github.com/ichaly/go-api/core/app/pkg/util"
-	"github.com/json-iterator/go"
 	"golang.org/x/sync/singleflight"
 	"gorm.io/gorm"
 	"gorm.io/gorm/callbacks"
 	"time"
 )
 
-// https://github.com/liyuan1125/gorm-cache/blob/master/cache.go
-var (
-	requestGroup singleflight.Group
-	json         = jsoniter.ConfigCompatibleWithStandardLibrary
-)
+var requestGroup singleflight.Group
 
 type keyCacheContext struct{}
 

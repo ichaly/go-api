@@ -1,7 +1,7 @@
 package base
 
 import (
-	eson "encoding/json"
+	json2 "encoding/json"
 	"fmt"
 	gql "github.com/dosco/graphjin/core"
 	"github.com/eko/gocache/v3/cache"
@@ -115,10 +115,10 @@ func getBigId() string {
 }
 
 type gqlReq struct {
-	OpName string          `json:"operationName"`
-	Query  string          `json:"query"`
-	Vars   eson.RawMessage `json:"variables,omitempty"`
-	Ext    extensions      `json:"extensions,omitempty"`
+	OpName string           `json:"operationName"`
+	Query  string           `json:"query"`
+	Vars   json2.RawMessage `json:"variables,omitempty"`
+	Ext    extensions       `json:"extensions,omitempty"`
 }
 
 type extensions struct {
