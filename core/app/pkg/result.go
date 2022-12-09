@@ -18,14 +18,15 @@ type result struct {
 
 // WithError 自定义错误信息
 func (res *result) WithError(errors ...error) result {
+	var maps []map[string]interface{}
 	if errors != nil && len(errors) > 0 {
 		for _, e := range errors {
-			res.Errors = append(res.Errors, map[string]interface{}{"message": e.Error()})
+			maps = append(maps, map[string]interface{}{"message": e.Error()})
 		}
 	}
 	return result{
 		Code:   res.Code,
-		Errors: res.Errors,
+		Errors: maps,
 	}
 }
 
