@@ -2,7 +2,9 @@ package base
 
 import (
 	json2 "encoding/json"
+	"errors"
 	"fmt"
+	"github.com/casbin/casbin/v2"
 	gql "github.com/dosco/graphjin/core"
 	"github.com/eko/gocache/v3/cache"
 	"github.com/eko/gocache/v3/store"
@@ -26,11 +28,12 @@ const (
 )
 
 type Engine struct {
-	Graph *gql.GraphJin
-	Cache *cache.Cache[string]
+	Graph  *gql.GraphJin
+	Cache  *cache.Cache[string]
+	Casbin *casbin.Enforcer
 }
 
-func NewEngine(c *Config, d *gorm.DB, s *cache.Cache[string]) (*Engine, error) {
+func NewEngine(c *Config, d *gorm.DB, s *cache.Cache[string], e *casbin.Enforcer) (*Engine, error) {
 	db, err := d.DB()
 	if err != nil {
 		return nil, err
@@ -39,7 +42,7 @@ func NewEngine(c *Config, d *gorm.DB, s *cache.Cache[string]) (*Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Engine{Graph: jin, Cache: s}, nil
+	return &Engine{Graph: jin, Cache: s, Casbin: e}, nil
 }
 
 func (my *Engine) Attach(r chi.Router) {
@@ -70,6 +73,19 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 			if ext := q.Get("extensions"); ext != "" {
 				_ = json.UnmarshalFromString(ext, &req.Ext)
 			}
+		}
+		// 鉴权
+		// TODO:解析gql
+		obj := "obj"
+		act := "act"
+		sub := r.Context().Value(gql.UserIDKey)
+		eft, err := my.Casbin.Enforce(sub, obj, act)
+		if err != nil {
+			_ = render.JSON(w, core.ERROR.WithError(err))
+			return
+		} else if !eft {
+			_ = render.JSON(w, core.FORBIDDEN.WithError(errors.New("permission denied")))
+			return
 		}
 		// 从缓存中获取数据
 		var key string

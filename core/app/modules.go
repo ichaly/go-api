@@ -17,6 +17,7 @@ var Modules = fx.Options(
 		base.NewDatabase,
 		base.NewEngine,
 		base.NewServer,
+		base.NewCasbin,
 	),
 	fx.Provide(fx.Annotated{
 		Group:  "plugin",

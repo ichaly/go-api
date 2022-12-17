@@ -6,8 +6,9 @@ import (
 )
 
 var (
-	OK    = NewResult(http.StatusOK)                  // 通用成功
-	ERROR = NewResult(http.StatusInternalServerError) // 通用错误
+	OK        = NewResult(http.StatusOK)                  // 通用成功
+	FORBIDDEN = NewResult(http.StatusForbidden)           // 无权限
+	ERROR     = NewResult(http.StatusInternalServerError) // 通用错误
 )
 
 type result struct {
