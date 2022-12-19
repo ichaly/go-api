@@ -1,6 +1,7 @@
 package base
 
 import (
+	"cuelang.org/go/pkg/strings"
 	json2 "encoding/json"
 	"errors"
 	"fmt"
@@ -75,11 +76,25 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 			}
 		}
 		// 鉴权
-		// TODO:解析gql
-		obj := "obj"
-		act := "act"
+		var act string
+		for _, s := range strings.Split(req.Query, "\n") {
+			s = strings.Trim(s, " ")
+			if strings.Index(s, "query") == 0 {
+				act = "query"
+				break
+			} else if strings.Index(s, "mutation") == 0 {
+				act = "mutation"
+				break
+			} else if strings.Index(s, "subscription") == 0 {
+				act = "subscription"
+				break
+			}
+		}
 		sub := r.Context().Value(gql.UserIDKey)
-		eft, err := my.Casbin.Enforce(sub, obj, act)
+		if sub == nil {
+			sub = ""
+		}
+		eft, err := my.Casbin.Enforce(sub, req.OpName, act)
 		if err != nil {
 			_ = render.JSON(w, core.ERROR.WithError(err))
 			return
