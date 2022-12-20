@@ -86,6 +86,8 @@ default_limit: 20
 # to snake case in SQL
 # enable_camelcase: false
 
+disable_singular: true
+
 # Set session variable "user.id" to the user id
 # Enable this if you need the user id in triggers, etc
 # Note: This will not work with subscriptions
@@ -264,6 +266,7 @@ blocklist:
   - password
   - encrypted
   - token
+  - casbin_rule
 
 # Create custom actions with their own api endpoints
 # For example the below action will be available at /api/v1/actions/refresh_leaderboard_users
