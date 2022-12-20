@@ -1,7 +1,6 @@
 package base
 
 import (
-	"cuelang.org/go/pkg/strings"
 	json2 "encoding/json"
 	"errors"
 	"fmt"
@@ -29,9 +28,10 @@ const (
 )
 
 type Engine struct {
-	Graph  *gql.GraphJin
-	Cache  *cache.Cache[string]
-	Casbin *casbin.Enforcer
+	Graph   *gql.GraphJin
+	Cache   *cache.Cache[string]
+	Casbin  *casbin.Enforcer
+	actions map[gql.OpType]string
 }
 
 func NewEngine(c *Config, d *gorm.DB, s *cache.Cache[string], e *casbin.Enforcer) (*Engine, error) {
@@ -43,7 +43,12 @@ func NewEngine(c *Config, d *gorm.DB, s *cache.Cache[string], e *casbin.Enforcer
 	if err != nil {
 		return nil, err
 	}
-	return &Engine{Graph: jin, Cache: s, Casbin: e}, nil
+	return &Engine{Graph: jin, Cache: s, Casbin: e, actions: map[gql.OpType]string{
+		gql.OpUnknown:      "unknown",
+		gql.OpQuery:        "query",
+		gql.OpSubscription: "subscription",
+		gql.OpMutation:     "mutation",
+	}}, nil
 }
 
 func (my *Engine) Attach(r chi.Router) {
@@ -76,31 +81,19 @@ func (my *Engine) graphqlHandler() func(w http.ResponseWriter, r *http.Request) 
 			}
 		}
 		// 鉴权
-		var act string
-		for _, s := range strings.Split(req.Query, "\n") {
-			s = strings.Trim(s, " ")
-			if strings.Index(s, "query") == 0 {
-				act = "query"
-				break
-			} else if strings.Index(s, "mutation") == 0 {
-				act = "mutation"
-				break
-			} else if strings.Index(s, "subscription") == 0 {
-				act = "subscription"
-				break
+		if op, err := gql.Operation(req.Query); err == nil {
+			sub := r.Context().Value(gql.UserIDKey)
+			if sub == nil {
+				sub = ""
 			}
-		}
-		sub := r.Context().Value(gql.UserIDKey)
-		if sub == nil {
-			sub = ""
-		}
-		eft, err := my.Casbin.Enforce(sub, req.OpName, act)
-		if err != nil {
-			_ = render.JSON(w, core.ERROR.WithError(err))
-			return
-		} else if !eft {
-			_ = render.JSON(w, core.FORBIDDEN.WithError(errors.New("permission denied")))
-			return
+			eft, err := my.Casbin.Enforce(sub, op.Name, my.actions[op.Type])
+			if err != nil {
+				_ = render.JSON(w, core.ERROR.WithError(err))
+				return
+			} else if !eft {
+				_ = render.JSON(w, core.FORBIDDEN.WithError(errors.New("permission denied")))
+				return
+			}
 		}
 		// 从缓存中获取数据
 		var key string
