@@ -1,12 +1,9 @@
-name: listUsers
+name: getUsers
 query: |-
-  query listUsers{
+  query getUsers{
     users(id: "3") {
       id
       full_name
       email
-      tester{
-        desc
-      }
     }
   }

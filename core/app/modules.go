@@ -5,6 +5,7 @@ import (
 	"github.com/ichaly/go-api/core/app/internal/plugin/captcha"
 	"github.com/ichaly/go-api/core/app/internal/plugin/explorer"
 	"github.com/ichaly/go-api/core/app/internal/plugin/oauth"
+	"github.com/ichaly/go-api/core/app/internal/plugin/resolver"
 	_ "github.com/ichaly/go-env/auto"
 	"go.uber.org/fx"
 )
@@ -40,5 +41,9 @@ var Modules = fx.Options(
 			Target: oauth.NewOauthVerify,
 		},
 	),
+	fx.Provide(fx.Annotated{
+		Group:  "middleware",
+		Target: resolver.NewTest,
+	}),
 	fx.Invoke(base.Bootstrap),
 )

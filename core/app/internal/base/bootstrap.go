@@ -21,7 +21,7 @@ type Enhance struct {
 }
 
 func Bootstrap(
-	l fx.Lifecycle, s *Engine, r *chi.Mux, c *Config, e Enhance,
+	l fx.Lifecycle, c *Config, e Enhance, r *chi.Mux, s *Engine,
 ) {
 	//init middlewares
 	for _, m := range e.Middlewares {
